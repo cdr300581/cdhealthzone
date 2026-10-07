@@ -126,6 +126,27 @@
     .card-footer strong { color: var(--gold); }
     .storyboard-link { flex: 0 0 auto; color: var(--gold); font-weight: 700; }
 
+    .audio-toggle {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 20;
+      padding: 10px 16px;
+      border: 1px solid rgba(239, 197, 78, .7);
+      border-radius: 999px;
+      background: rgba(12, 61, 43, .9);
+      color: var(--ink);
+      font: 700 .8rem/1 "Trebuchet MS", sans-serif;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+    }
+
+    .audio-toggle[aria-pressed="true"] {
+      background: rgba(23, 105, 64, .95);
+    }
+
     .music-pulse { display: inline-flex; height: 18px; align-items: center; gap: 3px; }
     .music-pulse span { width: 3px; height: 7px; border-radius: 2px; background: var(--gold); animation: beat-bar .42s ease-in-out infinite alternate; }
     .music-pulse span:nth-child(2) { animation-delay: .08s; }
@@ -177,8 +198,11 @@
 
   </main>
 
+  <button id="audioToggle" class="audio-toggle" type="button" aria-label="Enable audio" aria-pressed="false">🔊 Enable audio</button>
+
   <script>
     const slideImage = document.getElementById('slideImage');
+    const audioToggle = document.getElementById('audioToggle');
     const storyboardSlides = [
       { src: 'images/storyboard-panels/opening-glitter-trail.png', alt: 'A golden trail of sparkling light on a green background' },
       { src: 'images/storyboard-panels/reena-r-appears.png', alt: 'The letter R beginning to form in gold script' },
@@ -231,10 +255,19 @@
       ambientContext = undefined;
     };
 
+    const setAudioButtonState = (enabled) => {
+      if (!audioToggle) return;
+      audioToggle.setAttribute('aria-pressed', String(enabled));
+      audioToggle.textContent = enabled ? '🔊 Audio on' : '🔊 Enable audio';
+    };
+
     const startAmbientMusic = async () => {
       const AudioContextType = window.AudioContext || window.webkitAudioContext;
       if (!AudioContextType) throw new Error('Web Audio is unavailable');
-      if (ambientContext?.state === 'running') return;
+      if (ambientContext?.state === 'running') {
+        setAudioButtonState(true);
+        return;
+      }
       stopAmbientMusic();
       ambientContext = new AudioContextType();
       await ambientContext.resume();
@@ -263,16 +296,26 @@
       };
       scheduleChord();
       ambientTimer = window.setInterval(scheduleChord, (60 / 144) * 4 * 1000);
+      setAudioButtonState(true);
     };
 
     const startMusicOnFirstInteraction = () => {
-      if (ambientContext && ambientContext.state === 'running') return;
-      startAmbientMusic().catch(() => {});
+      if (ambientContext && ambientContext.state === 'running') {
+        setAudioButtonState(true);
+        return;
+      }
+      startAmbientMusic().catch(() => setAudioButtonState(false));
     };
 
     showSlide(0);
     slideshowTimer = window.setInterval(() => showSlide(currentSlide + 1), 1900);
-    startAmbientMusic().catch(() => {});
+    startAmbientMusic().catch(() => setAudioButtonState(false));
+    if (audioToggle) {
+      audioToggle.addEventListener('click', (event) => {
+        event.preventDefault();
+        startMusicOnFirstInteraction();
+      });
+    }
     window.addEventListener('pointerdown', startMusicOnFirstInteraction, { once: true });
     window.addEventListener('keydown', startMusicOnFirstInteraction, { once: true });
     window.addEventListener('pagehide', stopAmbientMusic);
