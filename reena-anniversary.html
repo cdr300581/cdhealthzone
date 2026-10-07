@@ -243,6 +243,75 @@
     .event-details p + p { margin-top: 7px; }
     .event-date { color: var(--gold) !important; font-weight: 700; }
 
+    .storyboard-slideshow {
+      margin-top: 48px;
+      padding: clamp(18px, 4vw, 36px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(140deg, rgba(10, 49, 34, .9), rgba(4, 24, 17, .96));
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .24);
+    }
+
+    .slideshow-heading {
+      margin: 0 0 22px;
+      color: var(--gold);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .slide-stage {
+      position: relative;
+      display: grid;
+      width: min(100%, 1050px);
+      aspect-ratio: 16 / 9;
+      margin: 0 auto;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(239, 197, 78, .4);
+      border-radius: 6px;
+      background: #03140d;
+    }
+
+    .slide-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      animation: slide-arrive .4s ease both;
+    }
+
+    .slide-caption-row {
+      display: flex;
+      width: min(100%, 1050px);
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 12px auto 0;
+      color: var(--muted);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .9rem;
+    }
+
+    .slide-count { flex: 0 0 auto; color: var(--gold); font-weight: 700; }
+
+    .slideshow-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .slideshow-status {
+      min-height: 1.4em;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .82rem;
+      text-align: center;
+    }
+
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -278,6 +347,8 @@
     }
 
     .button.secondary:hover, .file-button.secondary:hover { background: rgba(239, 197, 78, .12); color: var(--gold); }
+
+    .button[hidden] { display: none; }
 
     .download-link { text-decoration: none; }
 
@@ -316,11 +387,13 @@
     .storyboard-link { color: var(--gold); font-family: "Trebuchet MS", sans-serif; font-weight: 700; }
 
     @keyframes arrive { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slide-arrive { from { opacity: .35; transform: scale(.99); } to { opacity: 1; transform: scale(1); } }
     @media (max-width: 760px) {
       .page { width: min(100% - 28px, 560px); padding-top: 20px; }
       .intro { padding-top: 40px; }
       .message { padding: 28px; }
       .note { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .slide-caption-row { align-items: flex-start; flex-direction: column; gap: 5px; }
       .opening-sequence { padding: 24px; }
       .opening-skip { top: 14px; right: 14px; }
     }
@@ -359,6 +432,24 @@
       <h1>Reena's Nutrition Center<br><em>1st Anniversary Celebrations</em></h1>
       <p class="intro-copy">Celebrating one inspiring year and all the brighter, healthier days still ahead.</p>
     </header>
+
+    <section class="storyboard-slideshow" aria-labelledby="slideshowTitle">
+      <h2 class="slideshow-heading" id="slideshowTitle">Reena's Anniversary Story</h2>
+      <figure class="slide-stage">
+        <img class="slide-image" id="slideImage" src="images/storyboard-panels/opening-glitter-trail.png" alt="A golden trail of sparkling light on a green background">
+      </figure>
+      <div class="slide-caption-row">
+        <span id="slideCaption">Opening sparkle trail</span>
+        <span class="slide-count" id="slideCount" aria-live="polite">1 / 17</span>
+      </div>
+      <div class="slideshow-controls" aria-label="Slideshow controls">
+        <button class="button secondary" id="previousSlide" type="button" aria-label="Previous slide">← Previous</button>
+        <button class="button" id="toggleSlideshow" type="button" aria-pressed="false">▶ Start slideshow with music</button>
+        <button class="button secondary" id="nextSlide" type="button" aria-label="Next slide">Next →</button>
+        <button class="button secondary" id="enableSlideMusic" type="button" hidden>♪ Enable sound</button>
+      </div>
+      <p class="slideshow-status" id="slideshowStatus" aria-live="polite">The slideshow starts after the title sequence.</p>
+    </section>
 
     <section class="celebration" aria-label="Anniversary celebration">
       <img class="anniversary-gif" src="images/ReenaNutritionCenterAnniversary.gif" alt="Reena's Nutrition Center 1st Anniversary Celebration in green and gold with an animated golden sparkle">
@@ -399,6 +490,7 @@
     const openingCelebrations = document.getElementById('openingCelebrations');
     const skipIntro = document.getElementById('skipIntro');
     const page = document.querySelector('.page');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let introSkipped = false;
     let introRevealed = false;
 
@@ -434,25 +526,167 @@
       if (introSkipped) return;
       await wait(500);
       revealPage();
+      startSlideshow(false);
     };
 
     skipIntro.addEventListener('click', () => {
       introSkipped = true;
       revealPage();
+      startSlideshow(true);
     });
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      introSkipped = true;
-      revealPage();
-    } else {
-      runTitleSequence();
-    }
 
     const musicInput = document.getElementById('musicInput');
     const music = document.getElementById('celebrationMusic');
     const musicToggle = document.getElementById('musicToggle');
     const mediaStatus = document.getElementById('mediaStatus');
+    const slideImage = document.getElementById('slideImage');
+    const slideCaption = document.getElementById('slideCaption');
+    const slideCount = document.getElementById('slideCount');
+    const toggleSlideshow = document.getElementById('toggleSlideshow');
+    const enableSlideMusic = document.getElementById('enableSlideMusic');
+    const slideshowStatus = document.getElementById('slideshowStatus');
+    const storyboardSlides = [
+      { src: 'images/storyboard-panels/opening-glitter-trail.png', caption: 'Opening sparkle trail', alt: 'A golden trail of sparkling light on a green background' },
+      { src: 'images/storyboard-panels/reena-r-appears.png', caption: "Reena's initial appears", alt: 'The letter R beginning to form in gold script' },
+      { src: 'images/storyboard-panels/reena-name.png', caption: "Reena's name", alt: "Reena's name in green and gold script" },
+      { src: 'images/storyboard-panels/reenas-logo.png', caption: 'Nutrition Center logo', alt: "Reena's Nutrition Center logo" },
+      { src: 'images/storyboard-panels/nutrition-title.png', caption: 'Nutrition title', alt: "Reena's Nutrition title" },
+      { src: 'images/storyboard-panels/nutrition-center-title.png', caption: 'Nutrition Center title', alt: "Reena's Nutrition Center title" },
+      { src: 'images/storyboard-panels/first-anniversary-number.png', caption: 'Anniversary emblem', alt: 'A crowned first-anniversary numeral' },
+      { src: 'images/storyboard-panels/anniversary-ribbon.png', caption: 'Anniversary ribbon', alt: 'A red and gold anniversary ribbon' },
+      { src: 'images/storyboard-panels/full-anniversary-title.png', caption: 'Full anniversary title', alt: "Reena's Nutrition Center anniversary title" },
+      { src: 'images/storyboard-panels/celebration-title.png', caption: 'Celebration title', alt: "Reena's Nutrition Center anniversary celebration title" },
+      { src: 'images/storyboard-panels/special-invitation.png', caption: 'Special invitation', alt: 'Special invitation for the anniversary celebration' },
+      { src: 'images/storyboard-panels/event-date-time.png', caption: 'Date and time', alt: 'Anniversary date and event time' },
+      { src: 'images/storyboard-panels/activity-afresh-shake.png', caption: 'Afresh and nutrition shake', alt: 'Afresh and nutrition shake activity card' },
+      { src: 'images/storyboard-panels/activity-result-sharing.png', caption: 'Result sharing', alt: 'Result sharing activity card' },
+      { src: 'images/storyboard-panels/activity-wellness-topic.png', caption: 'Health and wellness topic', alt: 'Health and wellness topic activity card' },
+      { src: 'images/storyboard-panels/activity-fun-fitness.png', caption: 'Fun and fitness activities', alt: 'Fun and fitness activities card' },
+      { src: 'images/storyboard-panels/closing-message.png', caption: 'Closing message', alt: 'Closing message: Come with your energy, leave with inspiration' }
+    ];
     let musicUrl;
+    let currentSlide = 0;
+    let slideshowTimer;
+    let slideshowRunning = false;
+    let ambientContext;
+    let ambientTimer;
+    let backgroundMusicPlaying = false;
+
+    const showSlide = (slideIndex) => {
+      currentSlide = (slideIndex + storyboardSlides.length) % storyboardSlides.length;
+      const slide = storyboardSlides[currentSlide];
+      slideImage.src = slide.src;
+      slideImage.alt = slide.alt;
+      slideCaption.textContent = slide.caption;
+      slideCount.textContent = `${currentSlide + 1} / ${storyboardSlides.length}`;
+    };
+
+    const playTone = (context, frequency, startAt, duration, volume, type) => {
+      const oscillator = context.createOscillator();
+      const envelope = context.createGain();
+      oscillator.type = type;
+      oscillator.frequency.value = frequency;
+      envelope.gain.setValueAtTime(0.0001, startAt);
+      envelope.gain.exponentialRampToValueAtTime(volume, startAt + 0.16);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+      oscillator.connect(envelope);
+      envelope.connect(context.destination);
+      oscillator.start(startAt);
+      oscillator.stop(startAt + duration + 0.03);
+    };
+
+    const stopAmbientMusic = () => {
+      if (ambientTimer) window.clearInterval(ambientTimer);
+      ambientTimer = undefined;
+      if (ambientContext) ambientContext.close();
+      ambientContext = undefined;
+    };
+
+    const startAmbientMusic = async () => {
+      const AudioContextType = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextType) throw new Error('Web Audio is unavailable');
+      ambientContext = new AudioContextType();
+      await ambientContext.resume();
+      const chordProgression = [
+        [261.63, 329.63, 392],
+        [196, 246.94, 293.66],
+        [220, 261.63, 329.63],
+        [174.61, 220, 261.63]
+      ];
+      let chordIndex = 0;
+      const scheduleChord = () => {
+        if (!ambientContext) return;
+        const context = ambientContext;
+        const startAt = context.currentTime + 0.08;
+        const chord = chordProgression[chordIndex % chordProgression.length];
+        chord.forEach((frequency) => playTone(context, frequency, startAt, 3.8, 0.025, 'triangle'));
+        const melody = [chord[2] * 2, chord[1] * 2, chord[0] * 2, chord[1] * 2];
+        melody.forEach((frequency, noteIndex) => playTone(context, frequency, startAt + noteIndex * 0.82, 0.66, 0.035, 'sine'));
+        chordIndex++;
+      };
+      scheduleChord();
+      ambientTimer = window.setInterval(scheduleChord, 4000);
+    };
+
+    const startBackgroundMusic = async (userGesture) => {
+      try {
+        if (music.src) {
+          stopAmbientMusic();
+          await music.play();
+          musicToggle.textContent = 'Ⅱ Pause music';
+          musicToggle.setAttribute('aria-pressed', 'true');
+        } else if (userGesture) {
+          await startAmbientMusic();
+        } else {
+          throw new Error('A click is needed to start audio');
+        }
+        backgroundMusicPlaying = true;
+        enableSlideMusic.hidden = true;
+        slideshowStatus.textContent = music.src ? 'Slideshow and selected music are playing.' : 'Slideshow and celebration instrumental are playing.';
+      } catch {
+        stopAmbientMusic();
+        backgroundMusicPlaying = false;
+        enableSlideMusic.hidden = false;
+        slideshowStatus.textContent = 'Slideshow is playing. Enable sound to hear the celebration music.';
+      }
+    };
+
+    const startSlideshow = async (userGesture = true) => {
+      if (slideshowRunning) {
+        pauseSlideshow();
+        return;
+      }
+      slideshowRunning = true;
+      toggleSlideshow.textContent = 'Ⅱ Pause slideshow';
+      toggleSlideshow.setAttribute('aria-pressed', 'true');
+      window.clearInterval(slideshowTimer);
+      slideshowTimer = window.setInterval(() => showSlide(currentSlide + 1), 4500);
+      await startBackgroundMusic(userGesture);
+    };
+
+    const pauseSlideshow = () => {
+      window.clearInterval(slideshowTimer);
+      slideshowTimer = undefined;
+      slideshowRunning = false;
+      backgroundMusicPlaying = false;
+      music.pause();
+      stopAmbientMusic();
+      musicToggle.textContent = '▶ Play music';
+      musicToggle.setAttribute('aria-pressed', 'false');
+      toggleSlideshow.textContent = '▶ Resume slideshow with music';
+      toggleSlideshow.setAttribute('aria-pressed', 'false');
+      enableSlideMusic.hidden = true;
+      slideshowStatus.textContent = 'Slideshow and music paused.';
+    };
+
+    showSlide(0);
+    document.getElementById('previousSlide').addEventListener('click', () => showSlide(currentSlide - 1));
+    document.getElementById('nextSlide').addEventListener('click', () => showSlide(currentSlide + 1));
+    toggleSlideshow.addEventListener('click', () => {
+      if (slideshowRunning) pauseSlideshow();
+      else startSlideshow(true);
+    });
+    enableSlideMusic.addEventListener('click', () => startBackgroundMusic(true));
 
     musicInput.addEventListener('change', () => {
       const file = musicInput.files[0];
@@ -464,12 +698,29 @@
       musicToggle.textContent = '▶ Play music';
       musicToggle.setAttribute('aria-pressed', 'false');
       mediaStatus.textContent = `${file.name} is ready. Press Play music when you're ready.`;
+      if (slideshowRunning) {
+        stopAmbientMusic();
+        music.play().then(() => {
+          backgroundMusicPlaying = true;
+          enableSlideMusic.hidden = true;
+          musicToggle.textContent = 'Ⅱ Pause music';
+          musicToggle.setAttribute('aria-pressed', 'true');
+          slideshowStatus.textContent = 'Slideshow and selected music are playing.';
+        }).catch(() => {
+          backgroundMusicPlaying = false;
+          enableSlideMusic.hidden = false;
+          slideshowStatus.textContent = 'Could not play that track. Choose another audio file.';
+        });
+      }
     });
 
     musicToggle.addEventListener('click', async () => {
       if (music.paused) {
         try {
+          stopAmbientMusic();
           await music.play();
+          backgroundMusicPlaying = true;
+          enableSlideMusic.hidden = true;
           musicToggle.textContent = 'Ⅱ Pause music';
           musicToggle.setAttribute('aria-pressed', 'true');
         } catch {
@@ -477,19 +728,32 @@
         }
       } else {
         music.pause();
+        backgroundMusicPlaying = false;
+        if (slideshowRunning) enableSlideMusic.hidden = false;
         musicToggle.textContent = '▶ Play music';
         musicToggle.setAttribute('aria-pressed', 'false');
       }
     });
 
     music.addEventListener('ended', () => {
+      backgroundMusicPlaying = false;
+      if (slideshowRunning) enableSlideMusic.hidden = false;
       musicToggle.textContent = '▶ Play music';
       musicToggle.setAttribute('aria-pressed', 'false');
     });
 
     window.addEventListener('pagehide', () => {
       if (musicUrl) URL.revokeObjectURL(musicUrl);
+      stopAmbientMusic();
     });
+
+    if (reducedMotion) {
+      introSkipped = true;
+      revealPage();
+      startSlideshow(false);
+    } else {
+      runTitleSequence();
+    }
   </script>
 </body>
 </html>
