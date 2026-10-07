@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f2f5e9">
+  <title>Reena's First Nutrition Anniversary</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5edcf;
+      --muted: #c4d1c0;
+      --paper: #071e18;
+      --coral: #df5548;
+      --green: #176940;
+      --gold: #efc54e;
+      --line: rgba(239, 197, 78, .28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background-color: #061a14;
+      background-image:
+        radial-gradient(ellipse at 50% -12%, rgba(205, 151, 38, .3), transparent 42%),
+        radial-gradient(ellipse at 6% 46%, rgba(12, 94, 55, .48), transparent 39%),
+        radial-gradient(ellipse at 100% 76%, rgba(163, 57, 31, .22), transparent 34%),
+        linear-gradient(155deg, #061710 0%, #0b2c20 48%, #071811 100%),
+        radial-gradient(rgba(239, 197, 78, .09) .7px, transparent .7px);
+      background-size: auto, auto, auto, auto, 18px 18px;
+      background-attachment: fixed;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    button, input { font: inherit; }
+
+    .opening-sequence {
+      position: fixed;
+      z-index: 10;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      background:
+        radial-gradient(ellipse at 50% 45%, rgba(205, 151, 38, .22), transparent 48%),
+        linear-gradient(155deg, #061710 0%, #0b2c20 48%, #071811 100%);
+      text-align: center;
+      transition: opacity .75s ease, visibility 0s linear .75s;
+    }
+
+    .opening-sequence.is-exiting {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .opening-copy { width: min(100%, 1040px); }
+
+    .opening-eyebrow {
+      margin: 0 0 30px;
+      color: #e6d39b;
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .opening-line {
+      min-height: 1.18em;
+      margin: 0;
+      color: #efc54e;
+      font-size: clamp(1.75rem, 5vw, 4.3rem);
+      line-height: 1.18;
+      text-shadow: 0 4px 32px rgba(239, 197, 78, .24);
+    }
+
+    .opening-line + .opening-line { margin-top: 12px; }
+
+    .opening-skip {
+      position: absolute;
+      top: 22px;
+      right: 24px;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid rgba(239, 197, 78, .52);
+      border-radius: 3px;
+      background: rgba(6, 26, 20, .55);
+      color: #f5edcf;
+      cursor: pointer;
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .85rem;
+    }
+
+    .opening-skip:hover { background: rgba(239, 197, 78, .14); }
+    .opening-skip:focus-visible { outline: 3px solid #efc54e; outline-offset: 3px; }
+
+    .page {
+      width: min(1240px, 100% - 40px);
+      margin: 0 auto;
+      padding: 34px 0 46px;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .75s ease, visibility 0s;
+    }
+
+    .page.is-revealed { visibility: visible; opacity: 1; }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .topline span:last-child { color: var(--coral); }
+
+    .intro {
+      max-width: 100%;
+      padding: clamp(42px, 6vw, 74px) 0 32px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 100%;
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(2.1rem, 5vw, 4.1rem);
+      font-weight: 500;
+      line-height: 1.08;
+      text-shadow: 0 4px 28px rgba(234, 180, 49, .2);
+    }
+
+    h1 em { color: var(--ink); font-weight: 500; }
+
+    .intro-copy {
+      max-width: 680px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .celebration {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid rgba(239, 197, 78, .4);
+      border-radius: 8px;
+      background: #061a14;
+      box-shadow: 0 24px 72px rgba(0, 0, 0, .38), 0 0 42px rgba(239, 197, 78, .09);
+    }
+
+    .page.is-revealed .intro { animation: arrive .7s ease-out both; }
+    .page.is-revealed .celebration { animation: arrive .7s .12s ease-out both; }
+
+    .anniversary-gif {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: #061a14;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(24px, 4vw, 42px);
+      border-top: 1px solid var(--line);
+      background: linear-gradient(120deg, rgba(10, 49, 34, .94), rgba(8, 29, 23, .98));
+    }
+
+    .anniversary-mark {
+      display: grid;
+      width: 74px;
+      aspect-ratio: 1;
+      margin-bottom: 22px;
+      place-items: center;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: 1.8rem;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .message h2 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 2.35rem;
+      font-weight: 500;
+      line-height: 1.05;
+      text-align: center;
+    }
+
+    .message p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .95rem;
+      line-height: 1.65;
+      text-align: center;
+      max-width: 680px;
+    }
+
+    .event-details {
+      width: min(100%, 820px);
+      margin-top: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .event-details p {
+      max-width: none;
+      margin: 0;
+      font-size: .92rem;
+    }
+
+    .event-details p + p { margin-top: 7px; }
+    .event-date { color: var(--gold) !important; font-weight: 700; }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button, .file-button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 16px;
+      border: 1px solid var(--ink);
+      border-radius: 2px;
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #f5d46c, #c99227);
+      color: #172619;
+      cursor: pointer;
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .button:hover, .file-button:hover { background: var(--coral); color: white; transform: translateY(-2px); }
+
+    .button.secondary, .file-button.secondary {
+      background: rgba(255, 255, 255, .035);
+      color: var(--gold);
+    }
+
+    .button.secondary:hover, .file-button.secondary:hover { background: rgba(239, 197, 78, .12); color: var(--gold); }
+
+    .download-link { text-decoration: none; }
+
+    .button:focus-visible, .file-button:focus-within { outline: 3px solid #d59a32; outline-offset: 3px; }
+
+    .file-button input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .media-status {
+      min-height: 1.4em;
+      margin-top: 12px !important;
+      font-size: .78rem !important;
+    }
+
+    .note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 0 0;
+      color: var(--muted);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .85rem;
+      line-height: 1.5;
+    }
+
+    .note strong { color: var(--gold); }
+    .note span:last-child { flex: 0 0 auto; color: var(--gold); font-weight: 700; }
+    .storyboard-link { color: var(--gold); font-family: "Trebuchet MS", sans-serif; font-weight: 700; }
+
+    @keyframes arrive { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 760px) {
+      .page { width: min(100% - 28px, 560px); padding-top: 20px; }
+      .intro { padding-top: 40px; }
+      .message { padding: 28px; }
+      .note { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .opening-sequence { padding: 24px; }
+      .opening-skip { top: 14px; right: 14px; }
+    }
+
+    @media (max-width: 420px) {
+      .topline { font-size: .66rem; }
+      .controls { align-items: stretch; flex-direction: column; }
+      .button, .file-button { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <section class="opening-sequence" id="openingSequence" aria-label="Anniversary title sequence">
+    <div class="opening-copy">
+      <p class="opening-eyebrow">A celebration a year in the making</p>
+      <h1 class="opening-line" id="openingName"></h1>
+      <p class="opening-line" id="openingNumber"></p>
+      <p class="opening-line" id="openingAnniversary"></p>
+      <p class="opening-line" id="openingCelebrations"></p>
+    </div>
+    <button class="opening-skip" id="skipIntro" type="button">Skip intro</button>
+  </section>
+
+  <main class="page">
+    <div class="topline">
+      <span>Reena's Nutrition Center</span>
+      <span>1st Anniversary Celebrations</span>
+    </div>
+
+    <header class="intro">
+      <p class="eyebrow">A year of growth, wellness, and community</p>
+      <h1>Reena's Nutrition Center<br><em>1st Anniversary Celebrations</em></h1>
+      <p class="intro-copy">Celebrating one inspiring year and all the brighter, healthier days still ahead.</p>
+    </header>
+
+    <section class="celebration" aria-label="Anniversary celebration">
+      <img class="anniversary-gif" src="images/ReenaNutritionCenterAnniversary.gif" alt="Reena's Nutrition Center 1st Anniversary Celebration in green and gold with an animated golden sparkle">
+
+      <div class="message">
+        <h2>A year of wellness. A future of possibility.</h2>
+        <p>Celebrating Reena, the community, and every healthy step along the way.</p>
+        <div class="event-details" aria-label="Anniversary event details">
+          <p class="event-date">10th October, Saturday | 8 AM - 11 AM</p>
+          <p><strong>Activities:</strong> Afresh + Protein shake | Result sharing | Fun activities</p>
+        </div>
+        <div class="controls">
+          <label class="file-button secondary" for="musicInput"><span aria-hidden="true">♪</span> Choose music
+            <input id="musicInput" type="file" accept="audio/*">
+          </label>
+          <button class="button secondary" id="musicToggle" type="button" disabled aria-pressed="false">▶ Play music</button>
+          <a class="button download-link" href="images/ReenaNutritionCenterWritingCelebration.gif" download="ReenaNutritionCenterWritingCelebration.gif">↓ Download Writing GIF</a>
+          <a class="button download-link" href="images/ReenaNutritionCenterAnniversary.gif" download="ReenaNutritionCenterAnniversary.gif">↓ Download Final Artwork GIF</a>
+        </div>
+        <p class="media-status" id="mediaStatus" aria-live="polite">Choose a song, download the writing GIF, or save the final artwork.</p>
+        <audio id="celebrationMusic" loop></audio>
+      </div>
+    </section>
+
+    <footer class="note">
+      <span><strong>To Reena:</strong> Your dedication is worth celebrating today and every day.</span>
+      <span>Happy first anniversary!</span>
+      <a class="storyboard-link" href="anniversary-storyboard.html">View storyboard panels</a>
+    </footer>
+
+  </main>
+
+  <script>
+    const openingSequence = document.getElementById('openingSequence');
+    const openingName = document.getElementById('openingName');
+    const openingNumber = document.getElementById('openingNumber');
+    const openingAnniversary = document.getElementById('openingAnniversary');
+    const openingCelebrations = document.getElementById('openingCelebrations');
+    const skipIntro = document.getElementById('skipIntro');
+    const page = document.querySelector('.page');
+    let introSkipped = false;
+    let introRevealed = false;
+
+    const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
+
+    const revealPage = () => {
+      if (introRevealed) return;
+      introRevealed = true;
+      page.classList.add('is-revealed');
+      openingSequence.classList.add('is-exiting');
+    };
+
+    const typeLine = async (element, text) => {
+      for (const character of text) {
+        if (introSkipped) return;
+        element.textContent += character;
+        await wait(58);
+      }
+    };
+
+    const runTitleSequence = async () => {
+      await typeLine(openingName, "REENA'S NUTRITION CENTER");
+      if (introSkipped) return;
+      await wait(2000);
+      if (introSkipped) return;
+      await typeLine(openingNumber, '1st');
+      if (introSkipped) return;
+      await wait(350);
+      await typeLine(openingAnniversary, 'ANNIVERSARY');
+      if (introSkipped) return;
+      await wait(350);
+      await typeLine(openingCelebrations, 'CELEBRATIONS');
+      if (introSkipped) return;
+      await wait(500);
+      revealPage();
+    };
+
+    skipIntro.addEventListener('click', () => {
+      introSkipped = true;
+      revealPage();
+    });
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      introSkipped = true;
+      revealPage();
+    } else {
+      runTitleSequence();
+    }
+
+    const musicInput = document.getElementById('musicInput');
+    const music = document.getElementById('celebrationMusic');
+    const musicToggle = document.getElementById('musicToggle');
+    const mediaStatus = document.getElementById('mediaStatus');
+    let musicUrl;
+
+    musicInput.addEventListener('change', () => {
+      const file = musicInput.files[0];
+      if (!file) return;
+      if (musicUrl) URL.revokeObjectURL(musicUrl);
+      musicUrl = URL.createObjectURL(file);
+      music.src = musicUrl;
+      musicToggle.disabled = false;
+      musicToggle.textContent = '▶ Play music';
+      musicToggle.setAttribute('aria-pressed', 'false');
+      mediaStatus.textContent = `${file.name} is ready. Press Play music when you're ready.`;
+    });
+
+    musicToggle.addEventListener('click', async () => {
+      if (music.paused) {
+        try {
+          await music.play();
+          musicToggle.textContent = 'Ⅱ Pause music';
+          musicToggle.setAttribute('aria-pressed', 'true');
+        } catch {
+          mediaStatus.textContent = 'This audio file could not be played. Please choose another track.';
+        }
+      } else {
+        music.pause();
+        musicToggle.textContent = '▶ Play music';
+        musicToggle.setAttribute('aria-pressed', 'false');
+      }
+    });
+
+    music.addEventListener('ended', () => {
+      musicToggle.textContent = '▶ Play music';
+      musicToggle.setAttribute('aria-pressed', 'false');
+    });
+
+    window.addEventListener('pagehide', () => {
+      if (musicUrl) URL.revokeObjectURL(musicUrl);
+    });
+  </script>
+</body>
+</html>

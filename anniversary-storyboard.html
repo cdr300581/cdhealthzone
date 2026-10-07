@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#061a14">
+  <title>Reena's Nutrition Center | Anniversary Storyboard</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5edcf;
+      --muted: #bdcbbd;
+      --gold: #efc54e;
+      --line: rgba(239, 197, 78, .3);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 12% 0%, rgba(17, 107, 63, .3), transparent 40%),
+        radial-gradient(ellipse at 90% 15%, rgba(179, 109, 25, .16), transparent 32%),
+        linear-gradient(155deg, #061710 0%, #0b2c20 48%, #071811 100%);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .page {
+      width: min(1440px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+      font-family: "Trebuchet MS", sans-serif;
+    }
+
+    .brand {
+      margin: 0;
+      color: var(--gold);
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .back-link {
+      color: var(--ink);
+      font-size: .9rem;
+      text-decoration-color: var(--gold);
+      text-underline-offset: 4px;
+    }
+
+    .intro {
+      padding: 44px 0 28px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 500;
+      line-height: 1.1;
+    }
+
+    .intro p {
+      max-width: 620px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-family: "Trebuchet MS", sans-serif;
+      line-height: 1.6;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: start;
+      gap: 18px;
+    }
+
+    figure {
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(3, 19, 13, .82);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, .2);
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #04130d;
+    }
+
+    figcaption {
+      padding: 12px 14px 14px;
+      border-top: 1px solid rgba(239, 197, 78, .17);
+      color: var(--ink);
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 1050px) {
+      .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 28px, 560px); padding-top: 20px; }
+      .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .intro { padding-top: 34px; }
+      figcaption { padding: 10px; font-size: .84rem; }
+    }
+
+    @media (max-width: 440px) {
+      .gallery { grid-template-columns: 1fr; }
+      .masthead { align-items: flex-start; flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <p class="brand">Reena's Nutrition Center</p>
+      <a class="back-link" href="reena-anniversary.html">← Back to celebration</a>
+    </header>
+
+    <section class="intro" aria-labelledby="pageTitle">
+      <h1 id="pageTitle">Anniversary Storyboard</h1>
+      <p>Individual, high-resolution panels from the celebration artwork. Each image keeps its original proportions.</p>
+    </section>
+
+    <section class="gallery" aria-label="Individual anniversary storyboard panels">
+      <figure><img src="images/storyboard-panels/opening-glitter-trail.png" alt="A golden trail of sparkling light on a green background" width="1890" height="1090" loading="lazy"><figcaption>Opening sparkle trail</figcaption></figure>
+      <figure><img src="images/storyboard-panels/reena-r-appears.png" alt="The letter R beginning to form in gold script" width="1890" height="1090" loading="lazy"><figcaption>Reena's initial appears</figcaption></figure>
+      <figure><img src="images/storyboard-panels/reena-name.png" alt="Reena's name in green and gold script" width="1890" height="1090" loading="lazy"><figcaption>Reena's name</figcaption></figure>
+      <figure><img src="images/storyboard-panels/reenas-logo.png" alt="Reena's Nutrition Center logo" width="1905" height="1090" loading="lazy"><figcaption>Nutrition Center logo</figcaption></figure>
+      <figure><img src="images/storyboard-panels/nutrition-title.png" alt="Reena's Nutrition title" width="1890" height="1060" loading="lazy"><figcaption>Nutrition title</figcaption></figure>
+      <figure><img src="images/storyboard-panels/nutrition-center-title.png" alt="Reena's Nutrition Center title" width="1890" height="1060" loading="lazy"><figcaption>Nutrition Center title</figcaption></figure>
+      <figure><img src="images/storyboard-panels/first-anniversary-number.png" alt="A crowned first-anniversary numeral" width="1890" height="1060" loading="lazy"><figcaption>Anniversary emblem</figcaption></figure>
+      <figure><img src="images/storyboard-panels/anniversary-ribbon.png" alt="A red and gold anniversary ribbon" width="1905" height="1060" loading="lazy"><figcaption>Anniversary ribbon</figcaption></figure>
+      <figure><img src="images/storyboard-panels/full-anniversary-title.png" alt="Reena's Nutrition Center anniversary title" width="1890" height="1045" loading="lazy"><figcaption>Full anniversary title</figcaption></figure>
+      <figure><img src="images/storyboard-panels/celebration-title.png" alt="Reena's Nutrition Center anniversary celebration title" width="1890" height="1045" loading="lazy"><figcaption>Celebration title</figcaption></figure>
+      <figure><img src="images/storyboard-panels/special-invitation.png" alt="Special invitation for the anniversary celebration" width="1890" height="1045" loading="lazy"><figcaption>Special invitation</figcaption></figure>
+      <figure><img src="images/storyboard-panels/event-date-time.png" alt="Anniversary date and event time" width="1905" height="1045" loading="lazy"><figcaption>Date and time</figcaption></figure>
+      <figure><img src="images/storyboard-panels/activity-afresh-shake.png" alt="Afresh and nutrition shake activity card" width="1530" height="1185" loading="lazy"><figcaption>Afresh and nutrition shake</figcaption></figure>
+      <figure><img src="images/storyboard-panels/activity-result-sharing.png" alt="Result sharing activity card" width="1590" height="1185" loading="lazy"><figcaption>Result sharing</figcaption></figure>
+      <figure><img src="images/storyboard-panels/activity-wellness-topic.png" alt="Health and wellness topic activity card" width="1405" height="1185" loading="lazy"><figcaption>Health and wellness topic</figcaption></figure>
+      <figure><img src="images/storyboard-panels/activity-fun-fitness.png" alt="Fun and fitness activities card" width="1510" height="1185" loading="lazy"><figcaption>Fun and fitness activities</figcaption></figure>
+      <figure><img src="images/storyboard-panels/closing-message.png" alt="Closing message: Come with your energy, leave with inspiration" width="1545" height="1185" loading="lazy"><figcaption>Closing message</figcaption></figure>
+    </section>
+  </main>
+</body>
+</html>
