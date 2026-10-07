@@ -3,18 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f2f5e9">
-  <title>Reena's First Nutrition Anniversary</title>
+  <meta name="theme-color" content="#061a14">
+  <title>Reena's Anniversary Celebration | Slideshow</title>
   <style>
     :root {
       color-scheme: dark;
       --ink: #f5edcf;
       --muted: #c4d1c0;
-      --paper: #071e18;
-      --coral: #df5548;
-      --green: #176940;
       --gold: #efc54e;
-      --line: rgba(239, 197, 78, .28);
+      --line: rgba(239, 197, 78, .32);
     }
 
     * { box-sizing: border-box; }
@@ -36,72 +33,61 @@
     }
 
     .page {
-      display: grid;
-      min-height: 100svh;
-      place-items: center;
-      width: min(1160px, calc(100% - 36px));
+      width: min(1240px, calc(100% - 40px));
       margin: 0 auto;
-      padding: clamp(18px, 4vw, 42px) 0;
+      padding: 24px 0 38px;
     }
 
-    .greeting-card {
-      width: 100%;
+    .artwork {
       overflow: hidden;
-      padding: clamp(12px, 2vw, 22px);
-      border: 1px solid rgba(239, 197, 78, .62);
+      border: 1px solid var(--line);
       border-radius: 8px;
-      background: linear-gradient(145deg, rgba(10, 50, 33, .97), rgba(3, 20, 14, .98));
-      box-shadow: 0 28px 90px rgba(0, 0, 0, .48), 0 0 52px rgba(239, 197, 78, .14);
-      animation: card-arrive .85s cubic-bezier(.2,.75,.25,1) both;
-    }
-
-    .card-visuals {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
-      align-items: center;
-      gap: clamp(10px, 1.7vw, 20px);
-    }
-
-    .cover-art, .slide-stage {
-      min-width: 0;
-      margin: 0;
-      overflow: hidden;
-      border: 1px solid rgba(239, 197, 78, .48);
-      border-radius: 5px;
-      background: #03140d;
+      background: #061a14;
+      box-shadow: 0 24px 72px rgba(0, 0, 0, .38), 0 0 42px rgba(239, 197, 78, .09);
     }
 
     .anniversary-gif {
       display: block;
       width: 100%;
       height: auto;
-      background: #061a14;
     }
 
     .event-details {
       display: grid;
-      grid-template-columns: minmax(170px, .75fr) minmax(0, 1.6fr);
+      grid-template-columns: minmax(180px, .75fr) minmax(0, 1.6fr);
       align-items: center;
       gap: 14px 22px;
-      margin-top: clamp(12px, 2vw, 20px);
-      padding: 12px clamp(4px, 1vw, 12px);
+      padding: 16px clamp(16px, 3vw, 30px);
       border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      background: linear-gradient(120deg, rgba(10, 49, 34, .94), rgba(8, 29, 23, .98));
       font-family: "Trebuchet MS", sans-serif;
     }
 
     .event-details p {
       margin: 0;
       color: var(--muted);
-      font-size: clamp(.82rem, 1.3vw, .98rem);
+      font-size: .95rem;
       line-height: 1.5;
     }
 
     .event-date { color: var(--gold) !important; font-weight: 700; }
 
     .storyboard-slideshow {
+      margin-top: 24px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #03140d;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .25);
+    }
+
+    .slide-stage {
+      display: grid;
+      width: 100%;
       aspect-ratio: 16 / 9;
-      position: relative;
+      margin: 0;
+      place-items: center;
+      overflow: hidden;
     }
 
     .slide-image {
@@ -111,70 +97,47 @@
       object-fit: contain;
     }
 
-    .card-footer {
+    .page-footer {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      padding: 12px 4px 0;
+      padding: 18px 4px 0;
       color: var(--muted);
       font-family: "Trebuchet MS", sans-serif;
-      font-size: .82rem;
-      line-height: 1.5;
+      font-size: .84rem;
     }
 
-    .card-footer strong { color: var(--gold); }
-    .storyboard-link { flex: 0 0 auto; color: var(--gold); font-weight: 700; }
+    .page-footer a { color: var(--gold); font-weight: 700; }
 
-    .music-pulse { display: inline-flex; height: 18px; align-items: center; gap: 3px; }
-    .music-pulse span { width: 3px; height: 7px; border-radius: 2px; background: var(--gold); animation: beat-bar .42s ease-in-out infinite alternate; }
-    .music-pulse span:nth-child(2) { animation-delay: .08s; }
-    .music-pulse span:nth-child(3) { animation-delay: .16s; }
-    .music-pulse span:nth-child(4) { animation-delay: .24s; }
-    .music-pulse span:nth-child(5) { animation-delay: .32s; }
-
-    @keyframes card-arrive { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    @keyframes beat-bar { to { height: 17px; background: #f7de89; } }
-    @media (max-width: 760px) {
-      .page { width: min(100% - 24px, 620px); }
-      .card-visuals { grid-template-columns: 1fr; }
-      .storyboard-slideshow { width: 100%; }
+    @media (max-width: 680px) {
+      .page { width: min(100% - 20px, 560px); padding-top: 10px; }
       .event-details { grid-template-columns: 1fr; gap: 6px; text-align: center; }
-      .card-footer { align-items: flex-start; flex-wrap: wrap; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .page-footer { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
 <body>
   <main class="page">
-    <article class="greeting-card" aria-label="Reena's musical anniversary greeting card">
-      <div class="card-visuals">
-        <figure class="cover-art">
-          <img class="anniversary-gif" src="images/ReenaNutritionCenterWritingCelebration.gif" alt="An animated anniversary greeting revealing Reena's Nutrition Center celebration and event details">
-        </figure>
-
-        <section class="storyboard-slideshow" aria-label="Anniversary storyboard slideshow">
-          <figure class="slide-stage">
-            <img class="slide-image" id="slideImage" src="images/storyboard-panels/opening-glitter-trail.png" alt="A golden trail of sparkling light on a green background">
-          </figure>
-        </section>
-      </div>
-
-      <section class="event-details" aria-label="Anniversary event details">
+    <section class="artwork" aria-label="Anniversary greeting and event details">
+      <img class="anniversary-gif" src="images/ReenaNutritionCenterAnniversary.gif" alt="Reena's Nutrition Center 1st Anniversary Celebration artwork">
+      <div class="event-details">
         <p class="event-date">10th October, Saturday | 8 AM - 11 AM</p>
         <p><strong>Activities:</strong> Afresh + Protein shake | Result sharing | Fun activities</p>
-      </section>
+      </div>
+    </section>
 
-      <footer class="card-footer">
-        <span><span class="music-pulse" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span> <strong>For Reena, with love.</strong></span>
-        <a class="storyboard-link" href="reena-anniversary-previous.html">Classic slideshow layout</a>
-        <a class="storyboard-link" href="anniversary-storyboard.html">All storyboard panels</a>
-      </footer>
-    </article>
+    <section class="storyboard-slideshow" aria-label="Anniversary storyboard slideshow">
+      <figure class="slide-stage">
+        <img class="slide-image" id="slideImage" src="images/storyboard-panels/opening-glitter-trail.png" alt="A golden trail of sparkling light on a green background">
+      </figure>
+    </section>
 
+    <footer class="page-footer">
+      <span>To Reena, with love.</span>
+      <a href="reena-anniversary.html">Open musical greeting card</a>
+      <a href="anniversary-storyboard.html">View all storyboard panels</a>
+    </footer>
   </main>
 
   <script>
@@ -199,7 +162,6 @@
       { src: 'images/storyboard-panels/closing-message.png', alt: 'Closing message: Come with your energy, leave with inspiration' }
     ];
     let currentSlide = 0;
-    let slideshowTimer;
     let ambientContext;
     let ambientTimer;
 
@@ -215,13 +177,13 @@
       const envelope = context.createGain();
       oscillator.type = type;
       oscillator.frequency.value = frequency;
-      envelope.gain.setValueAtTime(0.0001, startAt);
-      envelope.gain.exponentialRampToValueAtTime(volume, startAt + 0.16);
-      envelope.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+      envelope.gain.setValueAtTime(.0001, startAt);
+      envelope.gain.exponentialRampToValueAtTime(volume, startAt + .16);
+      envelope.gain.exponentialRampToValueAtTime(.0001, startAt + duration);
       oscillator.connect(envelope);
       envelope.connect(context.destination);
       oscillator.start(startAt);
-      oscillator.stop(startAt + duration + 0.03);
+      oscillator.stop(startAt + duration + .03);
     };
 
     const stopAmbientMusic = () => {
@@ -249,15 +211,15 @@
       const scheduleChord = () => {
         if (!ambientContext) return;
         const context = ambientContext;
-        const startAt = context.currentTime + 0.08;
+        const startAt = context.currentTime + .08;
         const chord = chordProgression[chordIndex % chordProgression.length];
         const beatDuration = 60 / 144;
-        chord.forEach((frequency) => playTone(context, frequency, startAt, beatDuration * 4 - 0.08, 0.022, 'triangle'));
+        chord.forEach((frequency) => playTone(context, frequency, startAt, beatDuration * 4 - .08, .022, 'triangle'));
         const melody = [chord[2] * 2, chord[1] * 2, chord[0] * 2, chord[1] * 2];
         melody.forEach((frequency, beatIndex) => {
           const beatAt = startAt + beatIndex * beatDuration;
-          playTone(context, chord[0] / 2, beatAt, 0.18, beatIndex === 0 ? 0.055 : 0.035, 'triangle');
-          playTone(context, frequency, beatAt + 0.03, 0.25, 0.032, 'sine');
+          playTone(context, chord[0] / 2, beatAt, .18, beatIndex === 0 ? .055 : .035, 'triangle');
+          playTone(context, frequency, beatAt + .03, .25, .032, 'sine');
         });
         chordIndex++;
       };
@@ -265,16 +227,14 @@
       ambientTimer = window.setInterval(scheduleChord, (60 / 144) * 4 * 1000);
     };
 
-    const startMusicOnFirstInteraction = () => {
-      if (ambientContext && ambientContext.state === 'running') return;
-      startAmbientMusic().catch(() => {});
-    };
-
     showSlide(0);
-    slideshowTimer = window.setInterval(() => showSlide(currentSlide + 1), 1900);
+    window.setInterval(() => showSlide(currentSlide + 1), 1900);
     startAmbientMusic().catch(() => {});
-    window.addEventListener('pointerdown', startMusicOnFirstInteraction, { once: true });
-    window.addEventListener('keydown', startMusicOnFirstInteraction, { once: true });
+    const retryAmbientMusic = () => {
+      if (ambientContext?.state !== 'running') startAmbientMusic().catch(() => {});
+    };
+    window.addEventListener('pointerdown', retryAmbientMusic, { once: true });
+    window.addEventListener('keydown', retryAmbientMusic, { once: true });
     window.addEventListener('pagehide', stopAmbientMusic);
   </script>
 </body>
