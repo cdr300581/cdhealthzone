@@ -233,7 +233,7 @@
         <p><strong>Activities:</strong> Healthy Breakfast | Result sharing | Fun activities</p>
       </section>
 
-      <section class="referral" aria-labelledby="referral-heading">
+      <section class="referral" aria-labelledby="referral-heading" tabindex="-1">
         <h2 id="referral-heading">Refer a Friend or Family Member</h2>
         <div class="referral-contact">
           <p><strong>Contact:</strong> Chakradhar — <a href="tel:+917304795659">73047 95659</a></p>
@@ -283,15 +283,33 @@
       { src: 'images/storyboard-panels/closing-message.png', alt: 'Closing message: Come with your energy, leave with inspiration' }
     ];
     let currentSlide = 0;
-    let slideshowTimer;
     let ambientContext;
     let ambientTimer;
+    const slideshow = document.querySelector('.storyboard-slideshow');
+    const referral = document.querySelector('.referral');
+    const slideDuration = 250;
+    const slideshowPause = 10000;
 
     const showSlide = (slideIndex) => {
       currentSlide = (slideIndex + storyboardSlides.length) % storyboardSlides.length;
       const slide = storyboardSlides[currentSlide];
       slideImage.src = slide.src;
       slideImage.alt = slide.alt;
+    };
+
+    const advanceSlideshow = () => {
+      if (currentSlide === storyboardSlides.length - 1) {
+        referral.focus({ preventScroll: true });
+        referral.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.setTimeout(() => {
+          showSlide(0);
+          window.setTimeout(advanceSlideshow, slideDuration);
+        }, slideshowPause);
+        return;
+      }
+
+      showSlide(currentSlide + 1);
+      window.setTimeout(advanceSlideshow, slideDuration);
     };
 
     const playTone = (context, frequency, startAt, duration, volume, type) => {
@@ -368,7 +386,7 @@
     };
 
     showSlide(0);
-    slideshowTimer = window.setInterval(() => showSlide(currentSlide + 1), 1900);
+    window.setTimeout(advanceSlideshow, slideDuration);
     startAmbientMusic().catch(() => setAudioButtonState(false));
     if (audioToggle) {
       audioToggle.addEventListener('click', (event) => {
