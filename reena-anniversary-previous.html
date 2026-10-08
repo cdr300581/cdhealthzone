@@ -240,11 +240,34 @@
       slideImage.alt = slide.alt;
     };
 
+    const scrollPageTo = (targetY, duration) => new Promise(resolve => {
+      const startY = window.scrollY;
+      const maxY = document.documentElement.scrollHeight - window.innerHeight;
+      const endY = Math.max(0, Math.min(targetY, maxY));
+      const startTime = performance.now();
+      const scrollDuration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : duration;
+
+      const animate = (now) => {
+        const progress = scrollDuration === 0 ? 1 : Math.min((now - startTime) / scrollDuration, 1);
+        const easedProgress = progress < .5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        window.scrollTo(0, startY + (endY - startY) * easedProgress);
+        if (progress < 1) {
+          window.requestAnimationFrame(animate);
+        } else {
+          resolve();
+        }
+      };
+
+      window.requestAnimationFrame(animate);
+    });
+
     const advanceSlideshow = () => {
       if (currentSlide === storyboardSlides.length - 1) {
-        window.setTimeout(() => {
+        window.setTimeout(async () => {
           referral.focus({ preventScroll: true });
-          referral.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          await scrollPageTo(referral.getBoundingClientRect().top + window.scrollY, 1000);
+          await scrollPageTo(document.documentElement.scrollHeight, 3000);
+          await scrollPageTo(0, 3000);
         }, referralFocusDelay);
         window.setTimeout(() => {
           showSlide(0);
