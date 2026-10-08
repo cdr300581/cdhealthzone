@@ -287,8 +287,9 @@
     let ambientTimer;
     const slideshow = document.querySelector('.storyboard-slideshow');
     const referral = document.querySelector('.referral');
-    const slideDuration = 250;
+    const slideDuration = 1900 / 3;
     const slideshowPause = 10000;
+    const referralFocusDelay = 1500;
 
     const showSlide = (slideIndex) => {
       currentSlide = (slideIndex + storyboardSlides.length) % storyboardSlides.length;
@@ -299,8 +300,10 @@
 
     const advanceSlideshow = () => {
       if (currentSlide === storyboardSlides.length - 1) {
-        referral.focus({ preventScroll: true });
-        referral.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.setTimeout(() => {
+          referral.focus({ preventScroll: true });
+          referral.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, referralFocusDelay);
         window.setTimeout(() => {
           showSlide(0);
           window.setTimeout(advanceSlideshow, slideDuration);
